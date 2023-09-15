@@ -5,9 +5,10 @@ import SideBar from './components/Sidebar';
 import sidebar_menu from './constants/sidebar-menu';
 
 import './App.css';
-import Orders from './pages/Orders';
+import Orders from './pages/Orders/index.jsx';
 import Product from './components/Product/Product';
 import Edit from './components/Product/EditFrom/Edit';
+import OrderDetail from './pages/Orders/OrderDetails';
 
 function App () {
   return(
@@ -20,9 +21,9 @@ function App () {
                   <Route path="*" element={<div></div>} />
                   <Route exact path="/" element={<div></div>} />
                   <Route exact path="/orders" element={< Orders/>} />
-                  {/* <Route exact path="/locations" element={<Product/>} /> */}
                   <Route exact path="/products" element={<Product/>} />
                   <Route path='/update/:id' element={<Edit/>}></Route>
+                  <Route path='/orderDetails/:id' element={<OrderDetail/>}></Route>
                   <Route exact path="/profile" element={<div></div>} />
               </Routes>
           </div>

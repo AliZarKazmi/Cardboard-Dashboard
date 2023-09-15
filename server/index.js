@@ -54,6 +54,16 @@ app.get('/orders',(req,res)=>{
     .then(users=>res.json(users))
     .catch(error=>res.json(error))
 })
+app.get('/orderDetails/:id',(req,res)=>{
+    const id = req.params.id
+    console.log(req.params);
+    OrderModel.findById({_id:id})
+    .then(users=>{ 
+        console.log(users)
+        res.json(users)
+    })
+    .catch(error=>res.json(error))
+})
 //run server
 app.listen(3001,()=>{ 
     console.log("server is running")

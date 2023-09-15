@@ -1,11 +1,14 @@
 const mongoose = require('mongoose')
 
 const OrderSchema= new mongoose.Schema({
-    item:[{
+    items:[{
         name: String,
         length: Number,
         width: Number,
         depth: Number,
+        material:String,
+        quantity:Number,
+        sides:String
         // Add other necessary details for the product
       }],
     client:{
