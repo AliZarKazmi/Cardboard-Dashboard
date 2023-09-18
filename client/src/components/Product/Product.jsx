@@ -12,7 +12,7 @@ function Product() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001")
+      .get("http://localhost:3001",{"cache" :"no-cache"})
       .then((result) => setProduct(result.data))
       .catch((error) => console.log(error));
   }, []);
