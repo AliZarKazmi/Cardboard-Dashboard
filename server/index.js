@@ -14,6 +14,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/Cardboard")
 //Get all data from Data base
 app.get('/',(req,res)=>{
     
+    
     ProductModel.find({})
     .then(users=>res.json(users))
     .catch(error=>res.json(error))
