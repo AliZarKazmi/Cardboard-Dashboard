@@ -8,9 +8,6 @@ const MaterialModel = require("./Models/MaterailEntity")
 const app = express()
 app.use(cors()) //sever side to frontend
 app.use(express.json()) // conversion
-
-
-
 mongoose.connect("mongodb://127.0.0.1:27017/Cardboard")
 
 
