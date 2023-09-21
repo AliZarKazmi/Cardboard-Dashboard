@@ -1,18 +1,18 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import DashboardHeader from "../../components/DashboardHeader";
-import {Link} from 'react-router-dom'
-
-// import "./styles.css";
-
+import { Link } from "react-router-dom";
 
 function MaterialAttributes() {
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/material-details",{"cache" :"no-cache"})
-      .then((result) => setProduct(result.data))
+      .get("http://localhost:3001/material-details", { cache: "no-cache" })
+      .then((result) => {
+        const data = result.data;
+        setProduct(data);
+      })
       .catch((error) => console.log(error));
   }, []);
 
@@ -23,7 +23,6 @@ function MaterialAttributes() {
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
           <h2>Material Attributes</h2>
-           
         </div>
 
         <table>
@@ -35,15 +34,18 @@ function MaterialAttributes() {
             <th>Action</th>
           </thead>
 
-          <tbody >
+          <tbody>
             {product.map((order, index) => (
               <tr key={index}>
                 <td>{order.materailName}</td>
                 <td> $ {order.paperRate}</td>
                 <td> $ {order.rollRate}</td>
-                <td> $ {order.gamrige}</td>  
+                <td> $ {order.gamrige}</td>
                 <td>
-                  <Link to={`update-Cost-Price/${order._id}`} className="btn btn-success">
+                  <Link
+                    to={`update-Cost-Price/${order._id}`}
+                    className="btn btn-success"
+                  >
                     Change Prices
                   </Link>
                 </td>
@@ -51,7 +53,6 @@ function MaterialAttributes() {
             ))}
           </tbody>
         </table>
-
       </div>
     </div>
   );
