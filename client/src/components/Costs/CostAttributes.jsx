@@ -18,9 +18,9 @@ function CostAttributes() {
 
   return (
     <div className="dashboard-content">
-      <DashboardHeader btnText="New Order" />
 
-      <div className="dashboard-content-container">
+
+      <div className="dashboard-content-container"  style={{marginTop:"5vh"}}>
         <div className="dashboard-content-header">
           <h2>Cost Estimaton Attributes</h2>
            

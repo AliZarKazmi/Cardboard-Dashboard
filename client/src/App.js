@@ -12,6 +12,8 @@ import OrderDetail from './pages/Orders/OrderDetails';
 import CostAttributes from './components/Costs/CostAttributes';
 import CostChange from './components/Costs/CostChange';
 import MaterialAttributes from './components/MaterialDetail/MaterialAttributes';
+import MaterialCostChange from './components/MaterialDetail/MaterialCostChange';
+import ManagePrice from './pages/ManagePrice';
 
 function App () {
   return(
@@ -23,13 +25,13 @@ function App () {
               <Routes>
                   <Route path="*" element={<div></div>} />
                   {/* <Route exact path="/" element={<CostAttributes/>} /> */}
-                  <Route exact path="/" element={<MaterialAttributes/>}/>
+                  <Route exact path="/" element={<ManagePrice/>}/>
                   <Route exact path="/orders" element={< Orders/>} />
                   <Route exact path="/products" element={<Product/>} />
                   <Route path='/update/:id' element={<Edit/>}></Route>
                   <Route path='/orderDetails/:id' element={<OrderDetail/>}></Route>
                   <Route path='update-Cost-Price/:id' element={<CostChange/>}></Route>
-                  {/* <Route path='material-data' element={<MaterialAttributes/>}></Route> */}
+                  <Route path='update-material-Cost-Price/:id' element={<MaterialCostChange/>}></Route>
                   <Route exact path="/profile" element={<div></div>} />
               </Routes>
           </div>

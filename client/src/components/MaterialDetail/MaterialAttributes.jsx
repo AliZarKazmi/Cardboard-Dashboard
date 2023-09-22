@@ -17,10 +17,11 @@ function MaterialAttributes() {
   }, []);
 
   return (
-    <div className="dashboard-content">
-      <DashboardHeader btnText="New Order" />
+    <>
+     <div className="dashboard-content" style={{marginTop:"-20vh"}}>
+    
 
-      <div className="dashboard-content-container">
+       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
           <h2>Material Attributes</h2>
         </div>
@@ -43,9 +44,9 @@ function MaterialAttributes() {
                 <td> $ {order.gamrige}</td>
                 <td>
                   <Link
-                    to={`update-Cost-Price/${order._id}`}
+                    to={`update-material-Cost-Price/${order._id}`}
                     className="btn btn-success"
-                  >
+                    >
                     Change Prices
                   </Link>
                 </td>
@@ -55,6 +56,7 @@ function MaterialAttributes() {
         </table>
       </div>
     </div>
+    </>
   );
 }
 

@@ -8,7 +8,7 @@ const sidebar_menu = [
         id: 1,
         icon: DashboardIcon,
         path: '/',
-        title: 'Dashboard',
+        title: 'Price Mangement',
     },
     {
         id: 2,

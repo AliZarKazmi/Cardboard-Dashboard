@@ -106,6 +106,32 @@ app.get("/material-details", (req, res) => {
     .catch((err) => res.json(err));
 });
 
+app.get("/material-Cost-Price/:id", (req, res) => {
+  const id = req.params.id;
+  console.log(req.params);
+  MaterialModel.findById({ _id: id })
+    .then((users) => {
+      console.log(users);
+      res.json(users);
+    })
+    .catch((error) => res.json(error));
+});
+app.put("/update-material-Cost-Price/:id", (req, res) => {
+  const id = req.params.id;
+  MaterialModel.findByIdAndUpdate(
+    { _id: id },
+    {
+      materailName: req.body.materailName,
+      paperRate: req.body.paperRate,
+      rollRate: req.body.rollRate,
+      gamrige:req.body.gamrige  
+    }
+  )
+    .then((users) => res.json(users))
+    .catch((error) => res.json(error));
+});
+
+
 //run server
 app.listen(3001, () => {
   console.log("server is running");
