@@ -5,12 +5,15 @@ const ProductModel = require("./Models/ProductsItems");
 const OrderModel = require("./Models/Orders");
 const CostsModel = require("./Models/Costs");
 const MaterialModel = require("./Models/MaterailEntity");
+const RollsModel = require("./Models/Rools")
 const app = express();
 app.use(cors()); //sever side to frontend
 app.use(express.json()); // conversion
 mongoose.connect("mongodb://127.0.0.1:27017/Cardboard");
 
-//Get all data from Data base
+
+
+//Carboard Box APIS
 app.get("/", (req, res) => {
   ProductModel.find({})
     .then((users) => res.json(users))
@@ -131,6 +134,13 @@ app.put("/update-material-Cost-Price/:id", (req, res) => {
     .catch((error) => res.json(error));
 });
 
+
+// Cardboard : Rolls APIS
+app.get("/rolls", (req, res) => {
+  RollsModel.find({})
+    .then((users) => res.json(users))
+    .catch((error) => res.json(error));
+});
 
 //run server
 app.listen(3001, () => {
