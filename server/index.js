@@ -5,13 +5,11 @@ const ProductModel = require("./Models/ProductsItems");
 const OrderModel = require("./Models/Orders");
 const CostsModel = require("./Models/Costs");
 const MaterialModel = require("./Models/MaterailEntity");
-const RollsModel = require("./Models/Rools")
+const RollsModel = require("./Models/Rolls");
 const app = express();
 app.use(cors()); //sever side to frontend
 app.use(express.json()); // conversion
 mongoose.connect("mongodb://127.0.0.1:27017/Cardboard");
-
-
 
 //Carboard Box APIS
 app.get("/", (req, res) => {
@@ -99,7 +97,6 @@ app.put("/update-Cost-Price/:id", (req, res) => {
     .catch((error) => res.json(error));
 });
 
-
 app.get("/material-details", (req, res) => {
   MaterialModel.find()
     .then((data) => {
@@ -127,13 +124,12 @@ app.put("/update-material-Cost-Price/:id", (req, res) => {
       materailName: req.body.materailName,
       paperRate: req.body.paperRate,
       rollRate: req.body.rollRate,
-      gamrige:req.body.gamrige  
+      gamrige: req.body.gamrige,
     }
   )
     .then((users) => res.json(users))
     .catch((error) => res.json(error));
 });
-
 
 // Cardboard : Rolls APIS
 app.get("/rolls", (req, res) => {
@@ -142,6 +138,58 @@ app.get("/rolls", (req, res) => {
     .catch((error) => res.json(error));
 });
 
+app.get("/singleroll/:id", (req, res) => {
+  const id = req.params.id;
+  RollsModel.findById({ _id: id })
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+app.get("/singleroll/:id/:size", (req, res) => {
+  const id = req.params.id;
+  const size = req.params.size;
+  RollsModel.findOne({ _id: id, "Sizes.Size": size })
+    .select({ Sizes: 1 })
+    .exec()
+    .then((data) => {
+      const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
+      console.log(Size);
+      res.json(Size);
+    })
+    .catch((error) => res.json(error));
+});
+
+app.put("/updaterolls/:id", (req, res) => {
+  const id = req.params.id;
+  const { Rate, size, Quantity } = req.body;
+  console.log(Rate, size, Quantity);
+
+  res.send("Hello");
+
+  // RollsModel.findOneAndUpdate({ _id: id, "Sizes.Size": size },{Rate:req.body.Rate})
+  // .select({ Sizes: 1 })
+  // .exec()
+  // .then((data) => {
+  //   const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
+  //   console.log(Size);
+  //   res.json(Size);
+  // })
+  // .catch((error) => res.json(error));
+
+  // RollsModel.findOneAndUpdate(
+  //   { _id: id },
+
+  //   {Rate:req.body.Rate,
+  //   Quantity: req.body.Quantity
+  //   }
+  //   )
+  //   .then((data=>{res.json(data)}))
+  //   .catch((err)=>{res.json(err)})
+});
 //run server
 app.listen(3001, () => {
   console.log("server is running");

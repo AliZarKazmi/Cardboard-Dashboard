@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const OrderSchema= new mongoose.Schema({
     items:[{
-        name: String,
+        name: { type : String},
         length: Number,
         width: Number,
         depth: Number,

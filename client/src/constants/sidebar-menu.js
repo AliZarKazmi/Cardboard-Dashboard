@@ -19,14 +19,14 @@ const sidebar_menu = [
     {
         id: 3,
         icon: ShippingIcon,
-        path: '/products',
-        title: 'Products',
+        path: '/cardboard-products',
+        title: 'Cardboard',
     },
     {
         id: 4,
         icon: UserIcon,
-        path: '/profile',
-        title: 'My account',
+        path: '/roll-products',
+        title: 'Rolls',
     }
 ]
 

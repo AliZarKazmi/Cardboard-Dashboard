@@ -1,22 +1,22 @@
 const mongoose = require("mongoose")
 
 const RoolSchema =  new mongoose.Schema({
-    Rooltype :{
+    Type:{
         type: String,
         required: true,
         trim:true
     },
-    rate:{
+    Rate:{
         type: Number,
         required: true
     },
-    sizes:{
+    Sizes:{
         type:[{
-            size: {
+            Size: {
                 type: Number,
                 required: true
             },
-            quantity:  {
+            Quantity:  {
                 type: Number,
                 required: true
             }
