@@ -54,9 +54,9 @@ function Rolls() {
               <tr key={index}>
                 <td> {rollData.Type}</td>
                 <td> Rs {rollData.Rate}</td>
-                <td>
-                  <select onChange={(e) => handleSizeChange(e, index)}>
-                    <option value="">Select size</option>
+                <td >
+                  <select onChange={(e) => handleSizeChange(e, index)} >
+                    <option value="">Select size</option >
                     {rollData?.Sizes.map((item,index) => {
                       return <option key={index} value={item.Size}>{item.Size}</option>;
                     })}

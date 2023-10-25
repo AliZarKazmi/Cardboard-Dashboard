@@ -1,7 +1,7 @@
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation,useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect,useState } from "react";
-
+import Swal from 'sweetalert2';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const EditRolls = () => {
@@ -10,6 +10,7 @@ const EditRolls = () => {
   const id = useParams().id;
   const [Quantity,setQuantity] = useState()
   const [Rate, setRate]=useState()
+  const navigate = useNavigate()
   
   useEffect(() => {
     axios
@@ -32,9 +33,10 @@ const EditRolls = () => {
     .then((result)=>
     {
         console.log(Quantity)
-        // navigate('/products')
+        Swal.fire("Updated Successfully")
+        navigate('/roll-products')
     })
-    .catch((error)=>console.log(error))
+    .catch((error)=>Swal.fire(error))
 
 }
   
