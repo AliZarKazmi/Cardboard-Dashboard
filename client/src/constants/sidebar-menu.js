@@ -27,7 +27,11 @@ const sidebar_menu = [
         icon: UserIcon,
         path: '/roll-products',
         title: 'Rolls',
-    }
+    },
+    {id: 5,
+        icon: ProductIcon,
+        path: '/reel-products',
+        title: 'Reels',}
 ]
 
 export default sidebar_menu;

@@ -16,6 +16,8 @@ import MaterialCostChange from "./components/MaterialDetail/MaterialCostChange";
 import ManagePrice from "./pages/ManagePrice";
 import Rolls from "./components/Rolls/Rolls";
 import EditRolls from "./components/Rolls/EditRolls";
+import Reels from "./components/Reels/Reels";
+import EditReels from "./components/Reels/EditReels";
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
             ></Route>
             <Route path="/roll-products" element={<Rolls />} />
             <Route path="/update-rolls/:id" element={<EditRolls />} />
+            <Route path="/reel-products" element={<Reels />} />
+            <Route path="/update-reels/:id" element={<EditReels />} />
           </Routes>
         </div>
       </div>

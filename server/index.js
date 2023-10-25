@@ -192,6 +192,57 @@ app.put("/updaterolls/:id", async (req, res) => {
   }
 });
 
+// Cardboard : Reels APIS
+app.get("/reels", (req, res) => {
+  ReelsModel.find({})
+    .then((users) => res.json(users))
+    .catch((error) => res.json(error));
+});
+
+
+app.get("/singlereel/:id/:size", (req, res) => {
+  const id = req.params.id;
+  const size = req.params.size;
+  console.log(size)
+  ReelsModel.findOne({ _id: id, "Sizes.Size": size })
+    .select({ Sizes: 1 })
+    .exec()
+    .then((data) => {
+      const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
+      console.log(Size);
+      res.json(Size);
+    })
+    .catch((error) => res.json(error));
+});
+
+app.put("/updatereels/:id", async (req, res) => {
+  const id = req.params.id;
+  const { Rate, size, Weight } = req.body;
+
+  try {
+    const reelObj = await ReelsModel.findOne({ _id: id, "Sizes.Size": size });
+
+    if (reelObj) {
+      // Update Rate and Weight
+      reelObj.Rate = Rate;
+      reelObj.Sizes.find((obj) => obj.Size == size).Weight = Weight;
+
+      // Save the updated roll
+      await reelObj.save();
+
+      console.log("Updated Rate:", reelObj.Rate);
+      console.log("Updated Weight:", Weight);
+    } else {
+      console.log("Reel not found");
+    }
+
+    res.json({reelObj});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 //run server
 app.listen(3001, () => {
   console.log("server is running");
