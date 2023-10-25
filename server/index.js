@@ -163,33 +163,34 @@ app.get("/singleroll/:id/:size", (req, res) => {
     .catch((error) => res.json(error));
 });
 
-app.put("/updaterolls/:id", (req, res) => {
+app.put("/updaterolls/:id", async (req, res) => {
   const id = req.params.id;
   const { Rate, size, Quantity } = req.body;
-  console.log(Rate, size, Quantity);
 
-  res.send("Hello");
+  try {
+    const rollObj = await RollsModel.findOne({ _id: id, "Sizes.Size": size });
 
-  // RollsModel.findOneAndUpdate({ _id: id, "Sizes.Size": size },{Rate:req.body.Rate})
-  // .select({ Sizes: 1 })
-  // .exec()
-  // .then((data) => {
-  //   const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
-  //   console.log(Size);
-  //   res.json(Size);
-  // })
-  // .catch((error) => res.json(error));
+    if (rollObj) {
+      // Update Rate and Quantity
+      rollObj.Rate = Rate;
+      rollObj.Sizes.find((obj) => obj.Size == size).Quantity = Quantity;
 
-  // RollsModel.findOneAndUpdate(
-  //   { _id: id },
+      // Save the updated roll
+      await rollObj.save();
 
-  //   {Rate:req.body.Rate,
-  //   Quantity: req.body.Quantity
-  //   }
-  //   )
-  //   .then((data=>{res.json(data)}))
-  //   .catch((err)=>{res.json(err)})
+      console.log("Updated Rate:", rollObj.Rate);
+      console.log("Updated Quantity:", Quantity);
+    } else {
+      console.log("Roll not found");
+    }
+
+    res.json({rollObj});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 //run server
 app.listen(3001, () => {
   console.log("server is running");
