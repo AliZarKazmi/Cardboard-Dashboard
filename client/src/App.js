@@ -20,6 +20,7 @@ import Reels from "./components/Reels/Reels";
 import EditReels from "./components/Reels/EditReels";
 import StockInRolls from "./components/Rolls/StockInRolls";
 import StockOutRolls from "./components/Rolls/StockOut";
+import ReelsStockIn from "./components/Reels/ReelsStockIn";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="/stock-out-rolls" element={<StockOutRolls />} />
             <Route path="/reel-products" element={<Reels />} />
             <Route path="/update-reels/:id" element={<EditReels />} />
+            <Route path="/stock-in-reels" element={<ReelsStockIn />} />
           </Routes>
         </div>
       </div>

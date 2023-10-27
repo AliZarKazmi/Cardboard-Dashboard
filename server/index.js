@@ -58,10 +58,10 @@ app.get("/orders", (req, res) => {
 });
 app.get("/orderDetails/:id", (req, res) => {
   const id = req.params.id;
-  console.log(req.params);
+ 
   OrderModel.findById({ _id: id })
     .then((users) => {
-      console.log(users);
+     
       res.json(users);
     })
     .catch((error) => res.json(error));
@@ -75,10 +75,10 @@ app.get("/cost-Info", (req, res) => {
 
 app.get("/costprice/:id", (req, res) => {
   const id = req.params.id;
-  console.log(req.params);
+
   CostsModel.findById({ _id: id })
     .then((users) => {
-      console.log(users);
+      
       res.json(users);
     })
     .catch((error) => res.json(error));
@@ -101,7 +101,7 @@ app.put("/update-Cost-Price/:id", (req, res) => {
 app.get("/material-details", (req, res) => {
   MaterialModel.find()
     .then((data) => {
-      console.log(data);
+      
       res.json(data);
     })
     .catch((err) => res.json(err));
@@ -109,10 +109,10 @@ app.get("/material-details", (req, res) => {
 
 app.get("/material-Cost-Price/:id", (req, res) => {
   const id = req.params.id;
-  console.log(req.params);
+
   MaterialModel.findById({ _id: id })
     .then((users) => {
-      console.log(users);
+     
       res.json(users);
     })
     .catch((error) => res.json(error));
@@ -144,7 +144,7 @@ app.get("/rolls", (req, res) => {
 //API#2: Getting Single Roll Data by its Name to get its size for Stock data
 app.get("/singleroll/:typename", (req, res) => {
   const typename = req.params.typename;
-  console.log(req.params.typename);
+ 
   RollsModel.find({ Type: typename })
     .select({ "Sizes.Size": 1 })
     .limit(1)
@@ -176,17 +176,16 @@ app.get("/singleroll/:id/:size", (req, res) => {
     .exec()
     .then((data) => {
       const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
-      console.log(Size);
+      
       res.json(Size);
     })
     .catch((error) => res.json(error));
 });
 
-
 //Adding New Quantity stocks in the actual avalaible stock
 app.put("/add-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
-  console.log(type, size, quantity);
+  
 
   try {
     const roll = await RollsModel.findOne({ Type: type });
@@ -198,18 +197,18 @@ app.put("/add-roll-stock", async (req, res) => {
         sizeData.Quantity += quantity;
         await roll.save();
 
-        console.log("Updated Quantity:", sizeData.Quantity);
+        
         res.json({ message: "Stock updated successfully" });
       } else {
-        console.log("Size not found");
+        
         res.status(404).json({ error: "Size not found" });
       }
     } else {
-      console.log("Type not found");
+     
       res.status(404).json({ error: "Type not found" });
     }
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -217,7 +216,6 @@ app.put("/add-roll-stock", async (req, res) => {
 //Reducing Stock Quantity
 app.put("/reduce-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
-  console.log(type, size, quantity);
 
   try {
     const roll = await RollsModel.findOne({ Type: type });
@@ -229,18 +227,18 @@ app.put("/reduce-roll-stock", async (req, res) => {
         sizeData.Quantity -= quantity;
         await roll.save();
 
-        console.log("Updated Quantity:", sizeData.Quantity);
+       
         res.json({ message: "Stock updated successfully" });
       } else {
-        console.log("Size not found");
+       
         res.status(404).json({ error: "Size not found" });
       }
     } else {
-      console.log("Type not found");
+     
       res.status(404).json({ error: "Type not found" });
     }
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -260,15 +258,14 @@ app.put("/updaterolls/:id", async (req, res) => {
       // Save the updated roll
       await rollObj.save();
 
-      console.log("Updated Rate:", rollObj.Rate);
-      console.log("Updated Quantity:", Quantity);
+      
     } else {
-      console.log("Roll not found");
+      throw new Error('Roll not found')
     }
 
     res.json({ rollObj });
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -280,19 +277,52 @@ app.get("/reels", (req, res) => {
     .catch((error) => res.json(error));
 });
 
+//stock in reel get data
+app.get("/stock-in-singlereel/:type", (req, res) => {
+  // const id = req.params.id;
+  const typeName = req.params.type;
+  
+  // res.json(typeName);
+  ReelsModel.findOne({ Type: typeName })
+    .select({ "Sizes.Size": 1 })
+    .exec()
+    .then((data) => {
+      const sizes = data.Sizes.map((obj) => obj.Size);
+      
+      res.json(sizes);
+    })
+    .catch((error) => res.json(error));
+});
+
 app.get("/singlereel/:id/:size", (req, res) => {
   const id = req.params.id;
   const size = req.params.size;
-  console.log(size);
+ 
   ReelsModel.findOne({ _id: id, "Sizes.Size": size })
     .select({ Sizes: 1 })
     .exec()
     .then((data) => {
       const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
-      console.log(Size);
+      
       res.json(Size);
     })
     .catch((error) => res.json(error));
+});
+
+//adding reel data in db
+app.post("/add-reel", async (req, res) => {
+  console.log(req.body.type);
+  const data = await ReelsModel.updateOne(
+    {
+      Type: req.body.type,
+      "Sizes.Size": req.body.size,
+    },
+    { $push: { "Sizes.$.Weight": req.body.weightData } }
+  );
+    // Find the ID of the newly created subdocument
+  // const subdocumentId = data.upserted[0]._id;
+  
+  res.status(201).json({data});
 });
 
 app.put("/updatereels/:id", async (req, res) => {
@@ -310,16 +340,13 @@ app.put("/updatereels/:id", async (req, res) => {
       // Save the updated roll
       await reelObj.save();
 
-      console.log("Updated Rate:", reelObj.Rate);
-      console.log("Updated Weight:", Weight);
+      
     } else {
-      console.log("Reel not found");
+     throw new Error('Reel not found')
     }
-
     res.json({ reelObj });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 });
 

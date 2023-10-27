@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 
 import { Link } from "react-router-dom";
-import "./rolls.css"; // Import your CSS file
+import "./ReelStockIn.css"; // Import your CSS file
 // import EditRolls from "./EditRolls";
 
 function Reels() {
@@ -39,6 +39,25 @@ function Reels() {
           <h2>Reels Attributes</h2>
         </div>
 
+        <div style={{display:'flex' , justifyContent:"flex-end"}}>
+         <div style={ {marginRight:"40px"}} >
+           <Link
+                    to={`/stock-in-reels`}
+                    className="btn btn-success"
+                    style={{backgroundColor:"Highlight", color:"white"}}
+                  >
+                    Stock-In
+                  </Link>
+                  </div>
+          <div style={ {marginRight:"40px"}}> <Link
+                    to={`/stock-out-rolls`}
+                    className="btn btn-success"
+                    style={{backgroundColor:"Highlight", color:"white"}}
+                  >
+                    Stock-Out
+                  </Link>
+                  </div>
+          </div>
         <table>
           <thead>
             <tr>

@@ -1,34 +1,44 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const ReelSchema =  new mongoose.Schema({
-    Type:{
-        type: String,
-        required: true,
-        trim:true
-    },
-    Rate:{
-        type: Number,
-        required: true
-    },
-    Sizes:{
-        type:[{
-            Size: {
+const ReelSchema = new Schema({
+  Type: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  
+  Sizes: {
+    type: [
+      {
+        Size: {
+          type: Number,
+          required: true,
+        },
+        Weight: {
+          type: [
+            {
+              weight_type: {
                 type: Number,
-                required: true
+                required: true,
+                trim: true,
+              },
+              vendorName: {
+                type: String,
+                required: true,
+                trim: true,
+                default: "Ali",
+              },
+              Rate: {
+                type: Number,
+                required: true,
+              }
             },
-            Weight:  {
-                type: Number,
-                required: true
-            }
-        }],        
-    },
-    description:{
-        type:String,        
-        required: true,
-        trim:true
-    }
+          ],
+        },
+      },
+    ],
+  }
+});
 
-
-})
-
-module.exports = mongoose.model("Reel",ReelSchema)
+module.exports = mongoose.model("Reel", ReelSchema);
