@@ -38,7 +38,25 @@ function Rolls() {
         <div className="dashboard-content-header">
           <h2>Rolls Attributes</h2>
         </div>
-
+          <div style={{display:'flex' , justifyContent:"flex-end"}}>
+         <div style={ {marginRight:"40px"}} >
+           <Link
+                    to={`/stock-in-rolls`}
+                    className="btn btn-success"
+                    style={{backgroundColor:"Highlight", color:"white"}}
+                  >
+                    Stock-In
+                  </Link>
+                  </div>
+          <div style={ {marginRight:"40px"}}> <Link
+                    to={`/stock-out-rolls`}
+                    className="btn btn-success"
+                    style={{backgroundColor:"Highlight", color:"white"}}
+                  >
+                    Stock-Out
+                  </Link>
+                  </div>
+          </div>
         <table>
           <thead>
             <tr>

@@ -41,6 +41,7 @@ const EditRolls = () => {
 }
   
   return (
+    
     <div>
 
       <form onSubmit={Update} style={{ margin: "60px" }}>
@@ -80,6 +81,7 @@ const EditRolls = () => {
             id="inputQuantity"
             value={Quantity}
             onChange={(e)=>{setQuantity(e.target.value)}}
+            disabled
           />
         </div>
 

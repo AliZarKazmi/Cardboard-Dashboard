@@ -6,7 +6,7 @@ const OrderModel = require("./Models/Orders");
 const CostsModel = require("./Models/Costs");
 const MaterialModel = require("./Models/MaterailEntity");
 const RollsModel = require("./Models/Rolls");
-const ReelsModel = require("./Models/Reels")
+const ReelsModel = require("./Models/Reels");
 const app = express();
 app.use(cors()); //sever side to frontend
 app.use(express.json()); // conversion
@@ -133,12 +133,29 @@ app.put("/update-material-Cost-Price/:id", (req, res) => {
 });
 
 // Cardboard : Rolls APIS
+
+//API#1 : Getting all Rolls Data
 app.get("/rolls", (req, res) => {
   RollsModel.find({})
     .then((users) => res.json(users))
     .catch((error) => res.json(error));
 });
 
+//API#2: Getting Single Roll Data by its Name to get its size for Stock data
+app.get("/singleroll/:typename", (req, res) => {
+  const typename = req.params.typename;
+  console.log(req.params.typename);
+  RollsModel.find({ Type: typename })
+    .select({ "Sizes.Size": 1 })
+    .limit(1)
+    .then((data) => {
+      res.json(data[0]);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+//API#1: Getting Single Roll Data by its ID
 app.get("/singleroll/:id", (req, res) => {
   const id = req.params.id;
   RollsModel.findById({ _id: id })
@@ -150,6 +167,7 @@ app.get("/singleroll/:id", (req, res) => {
     });
 });
 
+//filter Quantity on the basis of Size and id
 app.get("/singleroll/:id/:size", (req, res) => {
   const id = req.params.id;
   const size = req.params.size;
@@ -164,6 +182,69 @@ app.get("/singleroll/:id/:size", (req, res) => {
     .catch((error) => res.json(error));
 });
 
+
+//Adding New Quantity stocks in the actual avalaible stock
+app.put("/add-roll-stock", async (req, res) => {
+  const { type, size, quantity } = req.body;
+  console.log(type, size, quantity);
+
+  try {
+    const roll = await RollsModel.findOne({ Type: type });
+
+    if (roll) {
+      const sizeData = roll.Sizes.find((obj) => obj.Size == size);
+
+      if (sizeData) {
+        sizeData.Quantity += quantity;
+        await roll.save();
+
+        console.log("Updated Quantity:", sizeData.Quantity);
+        res.json({ message: "Stock updated successfully" });
+      } else {
+        console.log("Size not found");
+        res.status(404).json({ error: "Size not found" });
+      }
+    } else {
+      console.log("Type not found");
+      res.status(404).json({ error: "Type not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//Reducing Stock Quantity
+app.put("/reduce-roll-stock", async (req, res) => {
+  const { type, size, quantity } = req.body;
+  console.log(type, size, quantity);
+
+  try {
+    const roll = await RollsModel.findOne({ Type: type });
+
+    if (roll) {
+      const sizeData = roll.Sizes.find((obj) => obj.Size == size);
+
+      if (sizeData) {
+        sizeData.Quantity -= quantity;
+        await roll.save();
+
+        console.log("Updated Quantity:", sizeData.Quantity);
+        res.json({ message: "Stock updated successfully" });
+      } else {
+        console.log("Size not found");
+        res.status(404).json({ error: "Size not found" });
+      }
+    } else {
+      console.log("Type not found");
+      res.status(404).json({ error: "Type not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+//Update Rate of Rolls
 app.put("/updaterolls/:id", async (req, res) => {
   const id = req.params.id;
   const { Rate, size, Quantity } = req.body;
@@ -185,7 +266,7 @@ app.put("/updaterolls/:id", async (req, res) => {
       console.log("Roll not found");
     }
 
-    res.json({rollObj});
+    res.json({ rollObj });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -199,11 +280,10 @@ app.get("/reels", (req, res) => {
     .catch((error) => res.json(error));
 });
 
-
 app.get("/singlereel/:id/:size", (req, res) => {
   const id = req.params.id;
   const size = req.params.size;
-  console.log(size)
+  console.log(size);
   ReelsModel.findOne({ _id: id, "Sizes.Size": size })
     .select({ Sizes: 1 })
     .exec()
@@ -236,7 +316,7 @@ app.put("/updatereels/:id", async (req, res) => {
       console.log("Reel not found");
     }
 
-    res.json({reelObj});
+    res.json({ reelObj });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
