@@ -50,7 +50,7 @@ function Reels() {
                   </Link>
                   </div>
           <div style={ {marginRight:"40px"}}> <Link
-                    to={`/stock-out-rolls`}
+                    to={`/stock-out-reels`}
                     className="btn btn-success"
                     style={{backgroundColor:"Highlight", color:"white"}}
                   >
@@ -62,7 +62,7 @@ function Reels() {
           <thead>
             <tr>
               <th>Type Name</th>
-              <th>Rate</th>
+              {/* <th>Rate</th> */}
               <th>Size</th>
               <th>Action</th>
             </tr>
@@ -72,7 +72,7 @@ function Reels() {
             {roll.map((rollData, index) => (
               <tr key={index}>
                 <td> {rollData.Type}</td>
-                <td> Rs {rollData.Rate}</td>
+                {/* <td> Rs {rollData.Rate}</td> */}
                 <td >
                   <select onChange={(e) => handleSizeChange(e, index)} >
                     <option value="">Select size</option >
