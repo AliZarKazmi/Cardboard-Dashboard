@@ -1,94 +1,94 @@
-import { useParams, useLocation,useNavigate } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useEffect,useState } from "react";
-import Swal from 'sweetalert2';
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
 
-const EditReels
- = () => {
+import "bootstrap/dist/css/bootstrap.min.css";
+import UpdateRateInput from "./UpdateRateInput";
+
+
+const EditReels = () => {
   const propData = useLocation().state.data;
   const size = propData.size;
   const id = useParams().id;
-  const [Weight,setWeight] = useState()
-  const [Rate, setRate]=useState()
-  const navigate = useNavigate()
-  
+  const [Weight, setWeight] = useState([]);
+  const [uniqueWeight, setUniqueWeight] = useState([]);
+  const [selectedWeight, setSelectedWeight] = useState("");
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/singlereel/${id}/${size}`)
-      .then((res) => {
-        console.log(res);
-        setRate(propData.rate)
-        setWeight(res.data.Weight ) 
+    axios.get(`http://localhost:3001/singlereel/${id}/${size}`).then((res) => {
+      const weightList = [];
+      res.data.Weight.map((obj) => {
+        weightList.push(obj.weight_type);
+      });
+      setWeight(res.data.Weight);
+      setUniqueWeight([...new Set(weightList)]);
     });
-    console.log(Weight)
   }, [id, size]);
 
-  const Update=(e)=>{
-    e.preventDefault()
-    axios.put("http://localhost:3001/updatereels/"+id,{
-        Rate,
-        size,
-        Weight,
-    })
-    .then((result)=>
-    {
-        console.log(Weight)
-        Swal.fire("Updated Successfully")
-        navigate('/reel-products')
-    })
-    .catch((error)=>Swal.fire(error))
+  const handleWeightChange = (event) => {
+    const finalSelectedWeight = event.target.value;
+    setSelectedWeight(finalSelectedWeight);
+  };
 
-}
-  
   return (
-    <div>
-
-      <form onSubmit={Update} style={{ margin: "60px" }}>
-        <div className="form-row">
-          <div className="form-group col-md-3">
-            <label htmlFor="inputLabourCost">Type</label>
-            <input
-              className="form-control"
-              id="inputLabourCost"
-              value={propData.typeName}
-              disabled
-            />
-          </div>
-          <div className="form-group col-md-3">
-            <label htmlFor="inputRentPrice">Rate Rs</label>
-            <input
-              className="form-control"
-              id="inputRentPrice"
-              value={Rate}
-              onChange={(e)=>{setRate(e.target.value)}}
-            />
-          </div>
-        </div>
+    <div style={{ margin: "60px" }}>
+      <div className="form-row">
         <div className="form-group col-md-3">
-          <label htmlFor="inputPrintedSidesCost">Size:</label>
+          <label htmlFor="inputLabourCost">Type</label>
           <input
             className="form-control"
-            id="inputPrintedSidesCost"
-            value={propData.size}
-            disabled
+            id="inputLabourCost"
+            value={propData.typeName}
+            readOnly
           />
         </div>
-        <div className="form-group col-md-3">
-          <label htmlFor="inputQuantity">Weight:</label>
-          <input
-            className="form-control"
-            id="inputQuantity"
-            value={Weight}
-            onChange={(e)=>{setWeight(e.target.value)}}
-          />
-        </div>
-
-        <button type="submit" className="btn btn-primary">
-          Upload
-        </button>
-      </form>
+      </div>
+      <div className="form-group col-md-3">
+        <label htmlFor="inputPrintedSidesCost">Size:</label>
+        <input
+          className="form-control"
+          id="inputPrintedSidesCost"
+          value={propData.size}
+          readOnly
+        />
+      </div>
+      <div className="form-group col-md-3">
+        <label htmlFor="inputPrintedSidesCost">Weight:</label>
+        <select onChange={handleWeightChange}>
+          <option value="">Select Weight</option>
+          {uniqueWeight.map((item, index) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        {selectedWeight && (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Vendor Name</th>
+                <th>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Weight.filter((item) => item.weight_type == selectedWeight).map(
+                (vendor, index) => (
+                  <tr key={index}>
+                    <td>{vendor.vendorName}</td>
+                    <td>
+                      <UpdateRateInput vendor={vendor} size={size} id={id} />
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
-};export default EditReels
-;
+};
+
+export default EditReels;

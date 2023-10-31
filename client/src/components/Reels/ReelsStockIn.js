@@ -49,16 +49,16 @@ const ReelsStockIn = () => {
         size: selectedSize,
         weightData: [
           {
-            Rate,
             vendorName,
-            weight,
+            Rate,
+            weight_type: weight
           },
         ],
       })
       .then((response) => {
         console.log(response.data);
-        // Swal.fire("Stock Upadted Successfully!")
-        //      navigate({pathname:'/roll-products'})
+        Swal.fire("Stock Upadted Successfully!")
+             navigate({pathname:'/reel-products'})
       })
       .catch((error) => console.log(error));
     // // Handle adding stock here
@@ -82,7 +82,7 @@ const ReelsStockIn = () => {
   };
 
   const handleWeightChange = (event) => {
-    const newWeight = Number.parseInt(event.target.value);
+    const newWeight = event.target.value;
     setWeight(newWeight);
   };
 

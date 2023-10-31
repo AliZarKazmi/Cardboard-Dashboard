@@ -295,7 +295,6 @@ app.get("/singlereel/:id/:size", (req, res) => {
 
 //adding reel data in db
 app.post("/add-reel", async (req, res) => {
-  console.log(req.body.type);
   const data = await ReelsModel.updateOne(
     {
       Type: req.body.type,
@@ -309,7 +308,7 @@ app.post("/add-reel", async (req, res) => {
 //geting details of Reels across type and size
 app.get("/details-reels-data/:type/:size", async (req, res) => {
   const { type, size } = req.params;
-  console.log(req.params);
+
   ReelsModel.findOne({
     Type: type,
     "Sizes.Size": size,
@@ -317,31 +316,58 @@ app.get("/details-reels-data/:type/:size", async (req, res) => {
     .select({ Sizes: 1 })
     .exec()
     .then((data) => {
-      const selectedSize = data.Sizes.filter((obj)=>obj.Size == size)[0];
-      return res.json({  weight:selectedSize.Weight });
+      const selectedSize = data.Sizes.filter((obj) => obj.Size == size)[0];
+      return res.json({ weight: selectedSize.Weight });
     })
     .catch((error) => res.json(error));
 });
 
+//geting reel data across vendor weight
+app.get("/vendor-weights", (req, res) => {
+  const vendorId = req.body;
+});
+
 //Updating Rate of Reels across Weight and its vendor
-app.put("/updatereels/:id", async (req, res) => {
+
+app.put("/updatereels/:id", (req, res) => {
   const id = req.params.id;
-  const { Rate, size, Weight } = req.body;
+  const { Rate, size, vendorId } = req.body;
   try {
-    const reelObj = await ReelsModel.findOne({ _id: id, "Sizes.Size": size });
-    if (reelObj) {
-      // Update Rate and Weight
-      reelObj.Rate = Rate;
-      reelObj.Sizes.find((obj) => obj.Size == size).Weight = Weight;
-      // Save the updated roll
-      await reelObj.save();
-    } else {
-      throw new Error("Reel not found");
-    }
-    res.json({ reelObj });
+    ReelsModel.findOne({ _id: id, "Sizes.Size": size })
+      .select({ Sizes: 1 })
+      .exec()
+      .then((data) => {
+        const selectedSize = data.Sizes.filter((obj) => obj.Size == size)[0];
+
+        const weightObj = selectedSize.Weight.filter(
+          (obj) => obj._id == vendorId
+        )[0];
+
+        weightObj.Rate = Rate;
+
+        console.log(data, selectedSize, weightObj);
+        data.save();
+
+        return res.json({ chunk });
+      })
+      .catch((error) => res.json(error));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+//deleting specific reel across vender
+
+app.delete("/delete-reel/:id", async (req, res) => {
+  let id = req.params.id;
+ 
+  const data = await ReelsModel.updateOne(
+    {
+      Type: req.query.type,
+      "Sizes.Size": req.query.size,
+    },
+    { $pull: { "Sizes.$.Weight": { _id: id } } }
+  ).then((data) => res.status(201).json({ data }));
 });
 
 //run server

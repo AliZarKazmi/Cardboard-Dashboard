@@ -53,11 +53,26 @@ const StockOut = () => {
       )
       .then((response) => {
         setSelectedWeight(response.data.weight);
+        console.log(response.data.weight);
+
         // Handle the response data and update state as needed
       })
       .catch((error) => {
         console.log(error);
         // Handle errors, e.g., display an error message to the user
+      });
+  };
+  const handleDelete = (id) => {
+    
+    axios
+      .delete(`http://localhost:3001/delete-reel/${id}?type=${selectedType}&size=${selectedSize}`)
+      .then((data) => {
+        console.log(data);
+        Swal.fire("Deleted Successfully!");
+        navigate("/reel-products");
+      })
+      .catch((error) => {
+        Swal.fire("Network Error");
       });
   };
 
@@ -69,7 +84,7 @@ const StockOut = () => {
           style={{ marginTop: "5vh" }}
         >
           <div className="dashboard-content-header">
-            <h1>Reels Stock-In</h1>
+            <h1>Reels Stock-Out</h1>
           </div>
 
           <div>
@@ -129,7 +144,15 @@ const StockOut = () => {
                     <td>{item.vendorName}</td>
                     <td>{item.weight_type}</td>
                     <td>{item.Rate}</td>
-                    <td><button>Delete</button></td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          handleDelete(item._id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
