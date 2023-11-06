@@ -7,6 +7,7 @@ const CostsModel = require("./Models/Costs");
 const MaterialModel = require("./Models/MaterailEntity");
 const RollsModel = require("./Models/Rolls");
 const ReelsModel = require("./Models/Reels");
+const StockTrackingModel = require("./Models/StockTracking");
 const app = express();
 app.use(cors()); //sever side to frontend
 app.use(express.json()); // conversion
@@ -181,6 +182,13 @@ app.get("/singleroll/:id/:size", (req, res) => {
 //Adding New Quantity stocks in the actual avalaible stock
 app.put("/add-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
+  const stockTrackingData = {
+    productType:"roll",
+    operation:"stock-in",
+    quantity:quantity
+  } 
+  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+  await stockTrackingRecord.save();
 
   try {
     const roll = await RollsModel.findOne({ Type: type });
@@ -207,6 +215,13 @@ app.put("/add-roll-stock", async (req, res) => {
 //Reducing Stock Quantity
 app.put("/reduce-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
+  const stockTrackingData = {
+    productType:"roll",
+    operation:"stock-out",
+    quantity:quantity
+  } 
+  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+  await stockTrackingRecord.save();
 
   try {
     const roll = await RollsModel.findOne({ Type: type });
@@ -295,6 +310,13 @@ app.get("/singlereel/:id/:size", (req, res) => {
 
 //adding reel data in db
 app.post("/add-reel", async (req, res) => {
+
+  const stockTrackingData = {
+    productType:"reel",
+    operation:"stock-in"
+  } 
+ 
+
   const data = await ReelsModel.updateOne(
     {
       Type: req.body.type,
@@ -302,13 +324,16 @@ app.post("/add-reel", async (req, res) => {
     },
     { $push: { "Sizes.$.Weight": req.body.weightData } }
   );
+
+  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+  await stockTrackingRecord.save();
   res.status(201).json({ data });
 });
 
 //geting details of Reels across type and size
 app.get("/details-reels-data/:type/:size", async (req, res) => {
   const { type, size } = req.params;
-
+  
   ReelsModel.findOne({
     Type: type,
     "Sizes.Size": size,
@@ -360,7 +385,15 @@ app.put("/updatereels/:id", (req, res) => {
 
 app.delete("/delete-reel/:id", async (req, res) => {
   let id = req.params.id;
- 
+  
+  const stockTrackingData = {
+    productType:"reel",
+    operation:"stock-out"
+  } 
+  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+  await stockTrackingRecord.save();
+
+
   const data = await ReelsModel.updateOne(
     {
       Type: req.query.type,
@@ -369,6 +402,15 @@ app.delete("/delete-reel/:id", async (req, res) => {
     { $pull: { "Sizes.$.Weight": { _id: id } } }
   ).then((data) => res.status(201).json({ data }));
 });
+
+
+//StockTracking data getting
+app.get("/stock-history",(req,res)=>{
+  StockTrackingModel.find({})
+  .then((users) => res.json(users))
+    .catch((error) => res.json(error));
+})
+
 
 //run server
 app.listen(3001, () => {
