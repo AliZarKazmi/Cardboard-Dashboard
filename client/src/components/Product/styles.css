@@ -85,7 +85,6 @@ tbody {
 }
 tr, thead {
     color: inherit;
-    /* display: table-row; */
     vertical-align: middle;
     outline: 0px;
 }

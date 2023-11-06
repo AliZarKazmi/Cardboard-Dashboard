@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 const ProductModel = require("./Models/ProductsItems");
 const OrderModel = require("./Models/Orders");
 const CostsModel = require("./Models/Costs");
@@ -8,12 +9,29 @@ const MaterialModel = require("./Models/MaterailEntity");
 const RollsModel = require("./Models/Rolls");
 const ReelsModel = require("./Models/Reels");
 const StockTrackingModel = require("./Models/StockTracking");
+const multer = require("multer");
+
+//Image store
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../client/public/admin-img"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.originalname}`);
+  },
+});
+
+console.log(path.join(__dirname, "../client/public/admin-img"));
+const upload = multer({ storage: storage });
+
 const app = express();
 app.use(cors()); //sever side to frontend
 app.use(express.json()); // conversion
 mongoose.connect("mongodb://127.0.0.1:27017/Cardboard");
 
-//Carboard Box APIS
+const port = 8000;
+
+//Get all data from Data base
 app.get("/", (req, res) => {
   ProductModel.find({})
     .then((users) => res.json(users))
@@ -24,6 +42,7 @@ app.get("/", (req, res) => {
 app.get("/cardboard/getItem/:id", (req, res) => {
   const id = req.params.id;
   ProductModel.findById({ _id: id })
+
     .then((users) => res.json(users))
     .catch((error) => res.json(error));
 });
@@ -37,7 +56,7 @@ app.put("/updateItems/:id", (req, res) => {
       length: req.body.length,
       width: req.body.width,
       depth: req.body.depth,
-      quatity: req.body.quatity,
+      quantity: req.body.quantity,
       rate: req.body.rate,
     }
   )
@@ -59,7 +78,6 @@ app.get("/orders", (req, res) => {
 });
 app.get("/orderDetails/:id", (req, res) => {
   const id = req.params.id;
-
   OrderModel.findById({ _id: id })
     .then((users) => {
       res.json(users);
@@ -75,7 +93,6 @@ app.get("/cost-Info", (req, res) => {
 
 app.get("/costprice/:id", (req, res) => {
   const id = req.params.id;
-
   CostsModel.findById({ _id: id })
     .then((users) => {
       res.json(users);
@@ -91,6 +108,7 @@ app.put("/update-Cost-Price/:id", (req, res) => {
       labor: req.body.labor,
       rent: req.body.rent,
       printedSides: req.body.printedSides,
+      imagePrintedSide: req.body.imagePrintedSides,
     }
   )
     .then((users) => res.json(users))
@@ -107,7 +125,6 @@ app.get("/material-details", (req, res) => {
 
 app.get("/material-Cost-Price/:id", (req, res) => {
   const id = req.params.id;
-
   MaterialModel.findById({ _id: id })
     .then((users) => {
       res.json(users);
@@ -119,13 +136,15 @@ app.put("/update-material-Cost-Price/:id", (req, res) => {
   MaterialModel.findByIdAndUpdate(
     { _id: id },
     {
-      materailName: req.body.materailName,
+      materailName: req.body.materialName,
       paperRate: req.body.paperRate,
       rollRate: req.body.rollRate,
       gamrige: req.body.gamrige,
     }
   )
-    .then((users) => res.json(users))
+    .then((users) => {
+      res.json(users);
+    })
     .catch((error) => res.json(error));
 });
 
@@ -141,7 +160,6 @@ app.get("/rolls", (req, res) => {
 //API#2: Getting Single Roll Data by its Name to get its size for Stock data
 app.get("/singleroll/:typename", (req, res) => {
   const typename = req.params.typename;
-
   RollsModel.find({ Type: typename })
     .select({ "Sizes.Size": 1 })
     .limit(1)
@@ -173,7 +191,6 @@ app.get("/singleroll/:id/:size", (req, res) => {
     .exec()
     .then((data) => {
       const Size = data.Sizes.filter((obj) => obj.Size == size)[0];
-
       res.json(Size);
     })
     .catch((error) => res.json(error));
@@ -182,11 +199,12 @@ app.get("/singleroll/:id/:size", (req, res) => {
 //Adding New Quantity stocks in the actual avalaible stock
 app.put("/add-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
+
   const stockTrackingData = {
-    productType:"roll",
-    operation:"stock-in",
-    quantity:quantity
-  } 
+    productType: "roll",
+    operation: "stock-in",
+    quantity: "quantity",
+  };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
 
@@ -215,11 +233,12 @@ app.put("/add-roll-stock", async (req, res) => {
 //Reducing Stock Quantity
 app.put("/reduce-roll-stock", async (req, res) => {
   const { type, size, quantity } = req.body;
+
   const stockTrackingData = {
-    productType:"roll",
-    operation:"stock-out",
-    quantity:quantity
-  } 
+    productType: "roll",
+    operation: "stock-out",
+    quantity: "quantity",
+  };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
 
@@ -260,7 +279,7 @@ app.put("/updaterolls/:id", async (req, res) => {
       // Save the updated roll
       await rollObj.save();
     } else {
-      throw new Error("Roll not found");
+      res.status(404).json({ message: "Roll not found" });
     }
 
     res.json({ rollObj });
@@ -309,31 +328,51 @@ app.get("/singlereel/:id/:size", (req, res) => {
 });
 
 //adding reel data in db
-app.post("/add-reel", async (req, res) => {
-
-  const stockTrackingData = {
-    productType:"reel",
-    operation:"stock-in"
-  } 
+// app.post("/add-reel", upload.single("image"), async (req, res) => {
+  
+//   //Tracking Stock History
+//   // const stockTrackingData = {
+//   //   productType: "reel",
+//   //   operation: "stock-in",
+//   // };
+//   // const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+//   // await stockTrackingRecord.save();
+//   // const weightDataArray = JSON.parse(req.body.weightData);
+//   // req.body.weightData
+//   //Adding New Reels data as Stock In
+//   const data = await ReelsModel.updateOne(
+//     {
+//       Type: req.body.type,
+//       "Sizes.Size": req.body.size,
+//     },
+//     { $push: { "Sizes.$.Weight": req.body.weightData }
+//   }
+//   );
  
-
+//   res.status(201).send("ok")
+// });
+app.post("/add-reel", upload.single("image"), async (req, res) => {
+  const newData =JSON.parse(req.body.weightData);
   const data = await ReelsModel.updateOne(
     {
       Type: req.body.type,
       "Sizes.Size": req.body.size,
     },
-    { $push: { "Sizes.$.Weight": req.body.weightData } }
+    {
+      $push: {
+        "Sizes.$.Weight": newData,
+      },
+    }
   );
 
-  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
-  await stockTrackingRecord.save();
-  res.status(201).json({ data });
+  res.status(201).send("ok");
 });
+
 
 //geting details of Reels across type and size
 app.get("/details-reels-data/:type/:size", async (req, res) => {
   const { type, size } = req.params;
-  
+
   ReelsModel.findOne({
     Type: type,
     "Sizes.Size": size,
@@ -370,7 +409,6 @@ app.put("/updatereels/:id", (req, res) => {
 
         weightObj.Rate = Rate;
 
-        console.log(data, selectedSize, weightObj);
         data.save();
 
         return res.json({ chunk });
@@ -385,14 +423,13 @@ app.put("/updatereels/:id", (req, res) => {
 
 app.delete("/delete-reel/:id", async (req, res) => {
   let id = req.params.id;
-  
+
   const stockTrackingData = {
-    productType:"reel",
-    operation:"stock-out"
-  } 
+    productType: "reel",
+    operation: "stock-out",
+  };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
-
 
   const data = await ReelsModel.updateOne(
     {
@@ -403,16 +440,14 @@ app.delete("/delete-reel/:id", async (req, res) => {
   ).then((data) => res.status(201).json({ data }));
 });
 
-
 //StockTracking data getting
-app.get("/stock-history",(req,res)=>{
+app.get("/stock-history", (req, res) => {
   StockTrackingModel.find({})
-  .then((users) => res.json(users))
+    .then((users) => res.json(users))
     .catch((error) => res.json(error));
-})
-
+});
 
 //run server
-app.listen(3001, () => {
-  console.log("server is running");
+app.listen(port, () => {
+  console.log("server is running on port ", port);
 });

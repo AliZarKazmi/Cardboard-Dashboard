@@ -9,7 +9,7 @@ const UpdateRateInput = ({ vendor, size, id }) => {
   const Update = (e) => {
     e.preventDefault();
     axios
-      .put("http://localhost:3001/updatereels/" + id, {
+      .put("http://localhost:8000/updatereels/" + id, {
         Rate,
         size,
         vendorId: vendor._id,
@@ -26,9 +26,10 @@ const UpdateRateInput = ({ vendor, size, id }) => {
     setRate(vendor.Rate)
   },[vendor])
   return (
-    <form onSubmit={Update}>
+    <form onSubmit={Update} className=" d-flex justify-content-start align-items-center gap-2">
       <input
         type="number"
+        className=" form-control w-50"
         value={Rate}
         onChange={(e) => {
           setRate(e.target.value);

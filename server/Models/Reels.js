@@ -20,18 +20,22 @@ const ReelSchema = new Schema({
             {
               weight_type: {
                 type: Number,
-                required: true,
-                trim: true,
+                required: true
               },
               vendorName: {
                 type: String,
                 required: true,
                 trim: true,
-                default: "Ali",
               },
               Rate: {
                 type: Number,
                 required: true,
+              },
+              imgPath:{
+                type:String,
+                required: true,
+                trim: true,
+
               }
             },
           ],

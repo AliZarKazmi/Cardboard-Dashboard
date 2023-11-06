@@ -3,25 +3,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-}
-.dashbord-header-btn {
-    padding: 0.8em;
-    padding-left: 2em;
-    padding-right: 2em;
-    cursor: pointer;
-    color: #FFFFFF;
-    font-size: 0.9rem;
-    font-weight: 700;
-    border-radius: 8px;
-    text-transform: uppercase;
-    border: 1px solid #015C92;
-    background-color: #015C92;
-}
-.dashbord-header-btn:hover {
-    color: #015C92;
-    border: 1px solid #015C92;
-    background-color: #F0F2F5;
+    justify-content: flex-end;
 }
 .dashbord-header-right {
     display: flex;

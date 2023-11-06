@@ -15,7 +15,7 @@ const StockInRolls = () => {
   useEffect(() => {
     // Getting all rolls data but first displaying Types of rolls
     axios
-      .get("http://localhost:3001/rolls", { cache: "no-cache" })
+      .get("http://localhost:8000/rolls", { cache: "no-cache" })
       .then((result) => {
         // Extract the Type values from the result data
         const types = result.data.map((item) => item.Type);
@@ -29,7 +29,7 @@ const StockInRolls = () => {
     setSelectedType(selectedType);
 
     axios
-      .get(`http://localhost:3001/singleroll/${selectedType}`)
+      .get(`http://localhost:8000/singleroll/${selectedType}`)
       .then((response) => {
         setSelectedSizes(response.data.Sizes);
       });
@@ -38,26 +38,24 @@ const StockInRolls = () => {
   };
   const handleAddStock = () => {
 
-    axios.put("http://localhost:3001/add-roll-stock",{
-        type : selectedType,
-        size : selectedSize,
-        quantity : quantity
+    axios.put("http://localhost:8000/add-roll-stock", {
+      type: selectedType,
+      size: selectedSize,
+      quantity: quantity
     })
-    .then((response)=>
-    {
+      .then((response) => {
         console.log(response)
         Swal.fire("Stock Upadted Successfully!")
-             navigate({pathname:'/roll-products'})
-    })
-    .catch((error)=>console.log(error))
+        navigate({ pathname: '/roll-products' })
+      })
+      .catch((error) => console.log(error))
     // Handle adding stock here
-   
+
   };
   const handleSizeChange = (event) => {
     const finalSelectedSize = event.target.value;
     setSelectedSize(finalSelectedSize);
     validateInputs(selectedType, finalSelectedSize, quantity);
-    console.log("Selected Size:", finalSelectedSize);
   };
 
   const handleQuantityChange = (event) => {
@@ -74,78 +72,62 @@ const StockInRolls = () => {
     }
   };
 
-  
+
 
   return (
     <>
-      <div className="dashboard-content">
-        <div
-          className="dashboard-content-container"
-          style={{ marginTop: "5vh" }}
-        >
-          <div className="dashboard-content-header">
-            <h1>Rools Stock-In</h1>
-          </div>
-
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Type Name</th>
-                  <th>Size</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <td>
-                  <select onChange={handleTypeChange}>
-                    <option value="">Select Type</option>
-                    {rollTypes.map((type, index) => (
-                      <option key={index} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <select onChange={handleSizeChange}>
-                    <option value="">Select Size</option>
-                    {selectedSizes.map((item, index) => (
-                      <option key={index} value={item.Size}>
-                        {item.Size}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <div className="dashboard-content-header">
-              <h2>Adding Stock</h2>
+      <div className="customForm">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-offset-3 col-md-6 col-lg-12">
+              <div className="form-container">
+                <h3 className="title">Rolls In-Stock</h3>
+                <form className="form-horizontal" >
+                  <div className="form-group">
+                    <label className=" pb-1">Type Name</label>
+                    <select className="form-select" aria-label="Default select example" onChange={handleTypeChange}>
+                      <option defaultValue="" selected>Select type</option>
+                      {rollTypes?.map((type, index) => (
+                        <option key={index} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className=" pb-1">Size</label>
+                    <select className="form-select" aria-label="Default select example" onChange={handleSizeChange}>
+                      <option defaultValue="" selected>Select size</option>
+                      {selectedSizes?.map((item, index) => (
+                        <option key={index} value={item.Size}>
+                          {item.Size}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <h6 className="title pt-2 ps-2">Add stock</h6>
+                  <div className="form-group">
+                    <label>Quantity</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="New stock quantity"
+                      id="quantity"
+                      value={quantity}
+                      onChange={handleQuantityChange}
+                    />
+                  </div>
+                  <div className="d-grid gap-2">
+                    <button
+                      className="btn btn-info fw-semibold text-white"
+                      type="submit"
+                      onClick={handleAddStock}
+                      disabled={isButtonDisabled}
+                    >Add to Stock</button>
+                  </div>
+                </form>
+              </div>
             </div>
-
-            <div>
-              <label htmlFor="quantity" style={{ margin: "20px" }}>
-                Quantity:
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                value={quantity}
-                onChange={handleQuantityChange}
-                style={{ margin: "20px" }}
-                min='0'
-              />
-            </div>
-            <button
-              onClick={handleAddStock}
-              className="btn btn-primary"
-              disabled={isButtonDisabled}
-              style={{ margin: "20px" }}
-            >
-              Add Stock
-            </button>
           </div>
         </div>
       </div>

@@ -1,9 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import DashboardHeader from "../../components/DashboardHeader";
 import {Link} from 'react-router-dom'
-
-// import "./styles.css";
 
 
 function CostAttributes() {
@@ -11,7 +8,7 @@ function CostAttributes() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/cost-Info",{"cache" :"no-cache"})
+      .get("http://localhost:8000/cost-Info",{"cache" :"no-cache"})
       .then((result) => setProduct(result.data))
       .catch((error) => console.log(error));
   }, []);
@@ -22,7 +19,7 @@ function CostAttributes() {
 
       <div className="dashboard-content-container"  style={{marginTop:"5vh"}}>
         <div className="dashboard-content-header">
-          <h2>Cost Estimaton Attributes</h2>
+          <h2>Cost Estimation Attributes</h2>
            
         </div>
 
@@ -31,17 +28,19 @@ function CostAttributes() {
             <th>Labour</th>
             <th>Rent</th>
             <th>Printed Sides</th>
+            <th>Image Printed Side</th>
             <th>Action</th>
           </thead>
 
           <tbody >
             {product.map((order, index) => (
               <tr key={index} style={{marginLeft:"80px"}}>
-                <td> $ {order.labor}</td>
-                <td> $ {order.rent}</td>
-                <td> $ {order.printedSides}</td> 
+                <td> Rs. {order.labor}</td>
+                <td> Rs. {order.rent}</td>
+                <td> Rs. {order.printedSides}</td> 
+                <td> Rs. {order.imagePrintedSide}</td> 
                 <td>
-                  <Link to={`update-Cost-Price/${order._id}`} className="btn btn-success">
+                  <Link to={`update-Cost-Price/${order._id}`} className="btn btn-info fw-semibold text-white">
                     Change Prices
                   </Link>
                 </td>

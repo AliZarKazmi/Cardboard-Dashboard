@@ -32,7 +32,7 @@ function SideBar ({ menu }) {
                         src={logo}
                         alt="logo" /> */}
 
-                        <h1>Cardboard Package</h1>
+                        <span className=' fs-4 fw-bold text-white py-4 px-2'>Cardboard Package</span>
                 </div>
 
                 <div className='sidebar-container'>

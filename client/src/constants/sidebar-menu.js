@@ -1,37 +1,48 @@
-import DashboardIcon from '../assets/icons/dashboard.svg';
-import ShippingIcon from '../assets/icons/shipping.svg';
-import ProductIcon from '../assets/icons/product.svg';
-import UserIcon from '../assets/icons/user.svg';
+import BankIcon from '../assets/icons/bank.svg';
+import OrdersIcon from '../assets/icons/orders.svg';
+import ProductIcon from '../assets/icons/products.svg';
+import RollIcon from '../assets/icons/rolls.svg';
+import ReelIcon from '../assets/icons/reels.svg';
+import HistoryIcon from '../assets/icons/history.svg';
 
 const sidebar_menu = [
     {
         id: 1,
-        icon: DashboardIcon,
+        icon: BankIcon,
         path: '/',
         title: 'Price Mangement',
     },
     {
         id: 2,
-        icon: ProductIcon,
+        icon: OrdersIcon,
         path: '/orders',
         title: 'Orders',
     },
     {
         id: 3,
-        icon: ShippingIcon,
-        path: '/cardboard-products',
-        title: 'Cardboard',
+        icon: ProductIcon,
+        path: '/products',
+        title: 'Products',
     },
     {
         id: 4,
-        icon: UserIcon,
+        icon: RollIcon,
         path: '/roll-products',
         title: 'Rolls',
     },
-    {id: 5,
-        icon: ProductIcon,
+    {
+        id: 5,
+        icon: ReelIcon,
         path: '/reel-products',
-        title: 'Reels',}
+        title: 'Reels',
+    }
+    ,
+    {
+        id: 6,
+        icon: HistoryIcon,
+        path: '/stock-history',
+        title: 'Stock History',
+    }
 ]
 
 export default sidebar_menu;

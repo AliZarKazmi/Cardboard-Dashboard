@@ -20,7 +20,7 @@ function Product() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/orders")
+      .get("http://localhost:8000/orders")
       .then((result) => setProduct(result.data))
       .catch((error) => console.log(error));
     // setPagination(calculateRange());
@@ -80,7 +80,7 @@ function Product() {
             <th>Email</th>
             <th>Shipping Address</th>
             <th>Phone Number</th>
-            <th>Total Amount ($)</th>
+            <th>Total Amount</th>
             <th>Card Number</th>
             <th>Action </th>
             {/* <th>Phone Number</th> */}
@@ -94,12 +94,12 @@ function Product() {
             return (
               <>
                 <tr key={index}>
-                  <td>{order.client.name}</td> 
-                  <td>{order.client.email}</td>
-                  <td>{order.client.shippingAddress}</td>
-                  <td>{order.client.phone}</td>
-                  <td>{order.client.totalAmount}</td>
-                  <td>{order.client.cardNumber}</td>
+                  <td>{order.client?.name}</td> 
+                  <td>{order.client?.email}</td>
+                  <td>{order.shipping?.address}</td>
+                  <td>{order.client?.phone}</td>
+                  <td>Rs. {order.items[0]?.price}</td>
+                  <td>{order.payment?.cardNumber}</td> 
 {/* 
                   {order.items.map((item, index) => {
                     return (
@@ -112,7 +112,7 @@ function Product() {
                   <td>
                     <Link
                       to={`/orderDetails/${order._id}`}
-                      className="btn btn-success"
+                      className="btn btn-info fw-semibold text-white"
                     >
                       Detail
                     </Link>

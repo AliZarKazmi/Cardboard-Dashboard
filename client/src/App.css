@@ -8,3 +8,129 @@
     flex-direction: column;
     background-color: #F0F2F5;
 }
+
+
+/* custom form styling */
+.customForm{
+    width: 75vw;
+    padding: 3rem 0 0 2rem;
+}
+.customForm .form-container {
+    width: 100%;
+    background-color: #fff;
+    font-size: 0;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px -15px rgba(0, 0, 0, 0.3);
+}
+
+.customForm .form-container .title {
+    color: #000;
+    font-size: 25px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin: 0 0 25px;
+}
+
+.customForm .form-container .title:after {
+    content: '';
+    background-color: #00A9EF;
+    height: 3px;
+    width: 60px;
+    margin: 10px 0 0;
+    display: block;
+    clear: both;
+}
+
+.customForm .form-container .sub-title {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+}
+
+.customForm .form-container .form-horizontal {
+    font-size: 0;
+}
+
+.customForm .form-container .form-horizontal .form-group {
+    color: #333;
+    width: 50%;
+    padding: 0 8px;
+    margin: 0 0 15px;
+    display: inline-block;
+}
+
+.customForm .form-container .form-horizontal .form-group:nth-child(4) {
+    margin-bottom: 30px;
+}
+
+.customForm .form-container .form-horizontal .form-group label {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.customForm .form-container .form-horizontal .form-control {
+    color: #888;
+    background: #fff;
+    font-weight: 400;
+    letter-spacing: 1px;
+    height: 40px;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: 2px solid #e7e7e7;
+    box-shadow: none;
+}
+
+.customForm .form-container .form-horizontal .btn:hover,
+.customForm .form-container .form-horizontal .btn:focus {
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.15), 5px 5px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+@media only screen and (max-width:479px) {
+    .customForm .form-container .form-horizontal .form-group {
+        width: 100%;
+    }
+}
+
+.customTable{
+    width: 75vw;
+    padding: 1rem 0 0 2rem;
+}
+.customTable .table-container {
+    width: 100%;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px -15px rgba(0, 0, 0, 0.3);
+}
+.customTable .table-container .title {
+    color: #000;
+    font-size: 25px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin: 0 0 25px;
+}
+
+.customTable .table-container .title:after {
+    content: '';
+    background-color: #00A9EF;
+    height: 3px;
+    width: 60px;
+    margin: 10px 0 0;
+    display: block;
+    clear: both;
+}
+
+.customTable .table-container .sub-title {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+}

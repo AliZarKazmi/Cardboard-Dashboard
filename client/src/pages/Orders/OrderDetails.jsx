@@ -12,7 +12,7 @@ function OrderDetail() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/orderDetails/" + id)
+      .get("http://localhost:8000/orderDetails/" + id)
       .then((result) => {
         setProduct(result.data);
       })
@@ -35,7 +35,6 @@ function OrderDetail() {
 
   return (
     <>
-      {console.log(product)}
       <div className="dashboard-content">
         <DashboardHeader btnText="New Order" />
 
@@ -61,17 +60,23 @@ function OrderDetail() {
               <th>Material</th>
               <th>Quantity</th>
               <th>Printed Sides</th>
+              <th>3D View</th> 
             </tr>
 
             {product.items?.map((order, index) => {
               return (
                 <>
-                  <tr >
+                  <tr key={index}>
                     <td>{order.name}</td>
-                    <td>{order.length} x {order.width} x {order.depth} </td>
+                    <td>{order.dimension.length} x {order.dimension.width} x {order.dimension.depth} </td>
                     <td>{order.material}</td>
                     <td>{order.quantity}</td>
-                    <td>{order.sides }</td>
+                    <td>{order.printedSides }</td>
+                    <td><Link
+                          className=" btn btn-info fw-semibold text-white"
+                          to={`/scene`}
+                          state={order}
+                        >View</Link></td>
                   </tr>
                 </>
               );

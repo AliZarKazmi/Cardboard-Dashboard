@@ -12,12 +12,14 @@ const StockOut = () => {
   const [Rate, setRate] = useState(0);
   const [weight, setWeight] = useState(0);
   const [vendorName, setVendorName] = useState();
+  const [isDisabled, setIsDisabled] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // Getting all reels data but first displaying Types of reels
     axios
-      .get("http://localhost:3001/reels", { cache: "no-cache" })
+      .get("http://localhost:8000/reels", { cache: "no-cache" })
       .then((result) => {
         // Extract the Type values from the result data
         const types = result.data.map((item) => item.Type);
@@ -27,33 +29,33 @@ const StockOut = () => {
   }, []);
 
   const handleTypeChange = (event) => {
-    const selectedType = event.target.value;
-    setSelectedType(selectedType);
+    if (event.target.value) {
+      const selectedType = event.target.value;
+      setSelectedType(selectedType);
 
-    axios
-      .get(`http://localhost:3001/stock-in-singlereel/${selectedType}`)
-      .then((response) => {
-        console.log(response);
-        setSelectedSizes(response.data);
-      });
+      axios
+        .get(`http://localhost:8000/stock-in-singlereel/${selectedType}`)
+        .then((response) => {
+          setSelectedSizes(response.data);
+        });
 
-    console.log("Selected Type Name:", selectedType);
+    }
+    else return;
   };
 
   const handleSizeChange = (event) => {
     const finalSelectedSize = event.target.value;
     setSelectedSize(finalSelectedSize);
-    console.log("Selected Size:", finalSelectedSize);
   };
 
-  const handleDetailsClick = () => {
+  const handleDetailsClick = (e) => {
+    e.preventDefault();
     axios
       .get(
-        `http://localhost:3001/details-reels-data/${selectedType}/${selectedSize}`
+        `http://localhost:8000/details-reels-data/${selectedType}/${selectedSize}`
       )
       .then((response) => {
         setSelectedWeight(response.data.weight);
-        console.log(response.data.weight);
 
         // Handle the response data and update state as needed
       })
@@ -63,11 +65,10 @@ const StockOut = () => {
       });
   };
   const handleDelete = (id) => {
-    
+
     axios
-      .delete(`http://localhost:3001/delete-reel/${id}?type=${selectedType}&size=${selectedSize}`)
+      .delete(`http://localhost:8000/delete-reel/${id}?type=${selectedType}&size=${selectedSize}`)
       .then((data) => {
-        console.log(data);
         Swal.fire("Deleted Successfully!");
         navigate("/reel-products");
       })
@@ -76,90 +77,104 @@ const StockOut = () => {
       });
   };
 
+  useEffect(() => {
+    if (selectedSize && selectedType) {
+      setIsDisabled(false);
+    }
+    else {
+      setIsDisabled(true)
+    }
+  }, [selectedSize, selectedType])
+
   return (
     <>
-      <div className="dashboard-content">
-        <div
-          className="dashboard-content-container"
-          style={{ marginTop: "5vh" }}
-        >
-          <div className="dashboard-content-header">
-            <h1>Reels Stock-Out</h1>
-          </div>
-
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Type Name</th>
-                  <th>Size</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <td>
-                  <select onChange={handleTypeChange}>
-                    <option value="">Select Type</option>
-                    {rollTypes.map((type, index) => (
-                      <option key={index} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td>
-                  <select onChange={handleSizeChange}>
-                    <option value="">Select Size</option>
-                    {selectedSizes.map((item, index) => (
-                      <option key={index} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-              </tbody>
-            </table>
-
-            <div>
-              <button
-                onClick={handleDetailsClick}
-                className="btn btn-primary"
-                style={{ margin: "20px" }}
-              >
-                Details
-              </button>
+      <div className="customForm">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-offset-3 col-md-6 col-lg-12">
+              <div className="form-container">
+                <h3 className="title">Reels Stock-Out</h3>
+                <form className="form-horizontal" >
+                  <div className="form-group">
+                    <label className=" pb-1">Type Name</label>
+                    <select className="form-select" aria-label="Default select example" onChange={handleTypeChange}>
+                      <option value="" selected>Select type</option>
+                      {rollTypes.map((type, index) => (
+                        <option key={index} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className=" pb-1">Size</label>
+                    <select className="form-select" aria-label="Default select example" onChange={handleSizeChange}>
+                      <option value="" selected>Select size</option>
+                      {selectedSizes.map((item, index) => (
+                        <option key={index} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="d-grid gap-2">
+                    <button
+                      className="btn btn-info fw-semibold text-white"
+                      type="submit"
+                      onClick={(e) => handleDetailsClick(e)}
+                      disabled={isDisabled}
+                    >View Details</button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Vendor Name</th>
-                  <th>Weight Type</th>
-                  <th>Rate</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedWeight.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.vendorName}</td>
-                    <td>{item.weight_type}</td>
-                    <td>{item.Rate}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          handleDelete(item._id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
+
+      <div className="customTable">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-offset-3 col-md-6 col-lg-12">
+              <div className="table-container">
+                <h3 className="title">Vendors Details</h3>
+                <table>
+                  <thead>
+                    <tr>
+                    <th>Image</th>
+                      <th>Vendor Name</th>
+                      <th>Weight Type</th>
+                      <th>Rate</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedWeight?.map((item, index) => (
+                      <tr key={index}>
+                         <img src={item.imgPath} alt="img"  style={{width:"80px", height:"50px"}}/>
+                        <td>{item.vendorName}</td>
+                        <td>{item.weight_type}</td>
+                        <td>{item.Rate}</td>
+                        <td>
+                          <button
+                            className="btn btn-info text-white fw-semibold"
+                            onClick={() => {
+                              handleDelete(item._id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </>
   );
 };

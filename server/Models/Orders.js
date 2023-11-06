@@ -1,29 +1,47 @@
 const mongoose = require('mongoose')
 
-const OrderSchema= new mongoose.Schema({
-    items:[{
-        name: { type : String},
-        length: Number,
-        width: Number,
-        depth: Number,
-        material:String,
+const OrderSchema = new mongoose.Schema({
+    items: [{
+        id: Number,
+        name: String,
+        dimension: {
+            length: Number,
+            width: Number,
+            depth: Number,
+        },
+        material: String,
+        quantity: Number,
+        sides: String,
+        price: Number,
+        pricePerPiece: Number,
+        printedSides:Number,
         quantity:Number,
-        sides:String
+        sides_design: {
+                back: String,
+                bottom: String,
+                front: String,
+                left: String,
+                right: String,
+        },
+        thickness: Number
         // Add other necessary details for the product
-      }],
-    client:{
-        name:String,
+    }],
+
+    client: {
+        name: String,
         emial: String,
-        shippingAddress : String,
-        phone : Number,
-        totalAmount:Number,
-        cardNumber:Number
+        phone : Number
+    },
+    payment: {},
+    shipping: {
+        address: String,
+        city: String,
+        state: String,
+        zip: String
     }
-    
-    
 })
 
 
-const OrderModel =  mongoose.model('orders',OrderSchema)
+const OrderModel = mongoose.model('orders', OrderSchema)
 
 module.exports = OrderModel

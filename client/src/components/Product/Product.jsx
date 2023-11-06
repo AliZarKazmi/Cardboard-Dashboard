@@ -12,7 +12,7 @@ function Product() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001",{"cache" :"no-cache"})
+      .get("http://localhost:8000",{"cache" :"no-cache"})
       .then((result) => setProduct(result.data))
       .catch((error) => console.log(error));
   }, []);
@@ -54,7 +54,7 @@ function Product() {
             <th>Image</th>
             <th>Product Name</th>
             <th>L x W x D(inc)</th>
-            <th>Rate ($)</th>
+            <th>Rate (Rs.)</th>
             <th>Quantity</th>
             <th>Action</th>
           </thead>
@@ -81,7 +81,7 @@ function Product() {
                 <td>{order.rate}</td>
                 <td>{order.quantity}</td>
                 <td>
-                  <Link to={`/update/${order._id}`} className="btn btn-success">
+                  <Link to={`/update/${order._id}`} className="btn btn-info fw-semibold text-white">
                     Edit
                   </Link>
                 </td>
