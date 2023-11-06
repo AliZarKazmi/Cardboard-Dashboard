@@ -3,6 +3,7 @@ import React from 'react';
 import './styles.css';
 import NotificationIcon from '../../assets/icons/notification.svg';
 
+
 function DashboardHeader ({ btnText, onClick }) {
     return(
         <div className='dashbord-header-container'> 
