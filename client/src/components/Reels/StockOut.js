@@ -64,10 +64,10 @@ const StockOut = () => {
         // Handle errors, e.g., display an error message to the user
       });
   };
-  const handleDelete = (id) => {
-
+  const handleDelete = (id,weight,vendor) => {
+    console.log(weight, vendor)
     axios
-      .delete(`http://localhost:8000/delete-reel/${id}?type=${selectedType}&size=${selectedSize}`)
+      .delete(`http://localhost:8000/delete-reel/${id}?type=${selectedType}&size=${selectedSize}&weightType=${weight}&vendor=${vendor}`)
       .then((data) => {
         Swal.fire("Deleted Successfully!");
         navigate("/reel-products");
@@ -159,7 +159,7 @@ const StockOut = () => {
                           <button
                             className="btn btn-info text-white fw-semibold"
                             onClick={() => {
-                              handleDelete(item._id);
+                              handleDelete(item._id,item.weight_type,item.vendorName);
                             }}
                           >
                             Delete

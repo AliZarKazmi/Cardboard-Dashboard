@@ -16,13 +16,41 @@ const StockTrackingSchema = new Schema({
     required:[true,"Operation is required"]
     
   },
+  categoryType:{
+    type:String,
+    default:null
+  },
+
+  productSize:{
+    type:Number,
+    default:null
+  },
+
+  
+  reelWeight:{
+    type:Number,
+    default:null
+  },
+
+  reelVendor:{
+    type:String,
+    default:null
+  },
+
+
   time: {
-    type:Date,
-    default: Date.now()
+    type: String, // Store the date as a string
+    default: () => {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is 0-based, so we add 1
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
   },
   quantity:{
     type:Number,
-    default:1
+    default:null
   }
 });
 

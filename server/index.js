@@ -203,7 +203,9 @@ app.put("/add-roll-stock", async (req, res) => {
   const stockTrackingData = {
     productType: "roll",
     operation: "stock-in",
-    quantity: "quantity",
+    quantity: quantity,
+    productSize :size,
+    categoryType:type
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
@@ -237,7 +239,9 @@ app.put("/reduce-roll-stock", async (req, res) => {
   const stockTrackingData = {
     productType: "roll",
     operation: "stock-out",
-    quantity: "quantity",
+    quantity: quantity,
+    productSize :size,
+    categoryType:type
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
@@ -328,31 +332,24 @@ app.get("/singlereel/:id/:size", (req, res) => {
 });
 
 //adding reel data in db
-// app.post("/add-reel", upload.single("image"), async (req, res) => {
-  
-//   //Tracking Stock History
-//   // const stockTrackingData = {
-//   //   productType: "reel",
-//   //   operation: "stock-in",
-//   // };
-//   // const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
-//   // await stockTrackingRecord.save();
-//   // const weightDataArray = JSON.parse(req.body.weightData);
-//   // req.body.weightData
-//   //Adding New Reels data as Stock In
-//   const data = await ReelsModel.updateOne(
-//     {
-//       Type: req.body.type,
-//       "Sizes.Size": req.body.size,
-//     },
-//     { $push: { "Sizes.$.Weight": req.body.weightData }
-//   }
-//   );
- 
-//   res.status(201).send("ok")
-// });
+
 app.post("/add-reel", upload.single("image"), async (req, res) => {
-  const newData =JSON.parse(req.body.weightData);
+  const newData = JSON.parse(req.body.weightData);
+   
+  //Tracking Stock History
+  const stockTrackingData = {
+    productType: "reel",
+    operation: "stock-in",
+    productSize: req.body.size,
+    categoryType: req.body.type,
+    reelWeight:newData[0].weight_type,
+    reelVendor:newData[0].vendorName
+  };
+  const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
+  await stockTrackingRecord.save();
+
+  //saving data to the database
+  // const newData = JSON.parse(req.body.weightData);
   const data = await ReelsModel.updateOne(
     {
       Type: req.body.type,
@@ -367,7 +364,6 @@ app.post("/add-reel", upload.single("image"), async (req, res) => {
 
   res.status(201).send("ok");
 });
-
 
 //geting details of Reels across type and size
 app.get("/details-reels-data/:type/:size", async (req, res) => {
@@ -420,17 +416,22 @@ app.put("/updatereels/:id", (req, res) => {
 });
 
 //deleting specific reel across vender
-
 app.delete("/delete-reel/:id", async (req, res) => {
   let id = req.params.id;
 
+  // Tracking reel stock data
   const stockTrackingData = {
     productType: "reel",
     operation: "stock-out",
+    productSize: req.query.size,
+    categoryType: req.query.type,
+    reelWeight:req.query.weightType,
+    reelVendor:req.query.vendor
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
 
+  //Deletion code: Stock-Out Reel
   const data = await ReelsModel.updateOne(
     {
       Type: req.query.type,
