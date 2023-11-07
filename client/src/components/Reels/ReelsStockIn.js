@@ -7,7 +7,7 @@ const ReelsStockIn = () => {
   const [rollTypes, setRollTypes] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedType, setSelectedType] = useState("");
-  const [selectedSize, setSelectedSize] = useState("")
+  const [selectedSize, setSelectedSize] = useState("");
   const [Rate, setRate] = useState(0);
   const [weight, setWeight] = useState(0);
   const [vendorName, setVendorName] = useState();
@@ -46,22 +46,22 @@ const ReelsStockIn = () => {
   const handleAddStock = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image',img);
-    formData.append('type',selectedType);
-    formData.append('size',selectedSize);
+    formData.append("image", img);
+    formData.append("type", selectedType);
+    formData.append("size", selectedSize);
     formData.append(
-      'weightData',
-       JSON.stringify([
-      {
-        vendorName,
-        Rate,
-        weight_type: weight,
-        imgPath:`../admin-img/${img.name}`
-      }
-    ]));
+      "weightData",
+      JSON.stringify([
+        {
+          vendorName,
+          Rate,
+          weight_type: weight,
+        },
+      ])
+    );
 
     axios
-      .post("http://localhost:8000/add-reel",formData,)
+      .post("http://localhost:8000/add-reel", formData)
       .then((response) => {
         Swal.fire("Stock Upadted Successfully!");
         navigate({ pathname: "/reel-products" });
@@ -92,7 +92,6 @@ const ReelsStockIn = () => {
   const handleImgChange = (event) => {
     const newImg = event.target.files[0];
     setImg(newImg);
-
   };
 
   useEffect(() => {

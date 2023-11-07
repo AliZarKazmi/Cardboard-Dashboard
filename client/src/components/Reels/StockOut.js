@@ -151,7 +151,7 @@ const StockOut = () => {
                   <tbody>
                     {selectedWeight?.map((item, index) => (
                       <tr key={index}>
-                         <img src={item.imgPath} alt="img"  style={{width:"80px", height:"50px"}}/>
+                         <img src={`../admin-img/${item.imgPath}`} alt="img"  style={{width:"80px", height:"50px"}}/>
                         <td>{item.vendorName}</td>
                         <td>{item.weight_type}</td>
                         <td>{item.Rate}</td>

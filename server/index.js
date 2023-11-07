@@ -17,11 +17,9 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../client/public/admin-img"));
   },
   filename: function (req, file, cb) {
-    cb(null, `${file.originalname}`);
+    cb(null, `${Date.now() + file.originalname}`);
   },
 });
-
-console.log(path.join(__dirname, "../client/public/admin-img"));
 const upload = multer({ storage: storage });
 
 const app = express();
@@ -204,8 +202,8 @@ app.put("/add-roll-stock", async (req, res) => {
     productType: "roll",
     operation: "stock-in",
     quantity: quantity,
-    productSize :size,
-    categoryType:type
+    productSize: size,
+    categoryType: type,
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
@@ -240,8 +238,8 @@ app.put("/reduce-roll-stock", async (req, res) => {
     productType: "roll",
     operation: "stock-out",
     quantity: quantity,
-    productSize :size,
-    categoryType:type
+    productSize: size,
+    categoryType: type,
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
@@ -334,22 +332,24 @@ app.get("/singlereel/:id/:size", (req, res) => {
 //adding reel data in db
 
 app.post("/add-reel", upload.single("image"), async (req, res) => {
-  const newData = JSON.parse(req.body.weightData);
-   
+  const newData = JSON.parse(req.body.weightData)[0];
+  if (req.file) {
+    newData.imgPath = req.file.filename;
+  }
   //Tracking Stock History
   const stockTrackingData = {
     productType: "reel",
     operation: "stock-in",
     productSize: req.body.size,
     categoryType: req.body.type,
-    reelWeight:newData[0].weight_type,
-    reelVendor:newData[0].vendorName
+    reelWeight: newData.weight_type,
+    reelVendor: newData.vendorName,
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
 
   //saving data to the database
-  // const newData = JSON.parse(req.body.weightData);
+  console.log(newData);
   const data = await ReelsModel.updateOne(
     {
       Type: req.body.type,
@@ -425,8 +425,8 @@ app.delete("/delete-reel/:id", async (req, res) => {
     operation: "stock-out",
     productSize: req.query.size,
     categoryType: req.query.type,
-    reelWeight:req.query.weightType,
-    reelVendor:req.query.vendor
+    reelWeight: req.query.weightType,
+    reelVendor: req.query.vendor,
   };
   const stockTrackingRecord = new StockTrackingModel(stockTrackingData);
   await stockTrackingRecord.save();
