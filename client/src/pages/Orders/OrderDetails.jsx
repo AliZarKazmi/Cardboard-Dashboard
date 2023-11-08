@@ -73,9 +73,10 @@ function OrderDetail() {
                     <td>{order.quantity}</td>
                     <td>{order.printedSides }</td>
                     <td><Link
-                          className=" btn btn-info fw-semibold text-white"
+                          className={order.ThreeD ? " btn btn-info fw-semibold text-white" : " btn btn-light fw-semibold text-secondary"}
                           to={`/scene`}
                           state={order}
+                          onClick={(e)=>(!order.ThreeD ? e.preventDefault() : '')}
                         >View</Link></td>
                   </tr>
                 </>
