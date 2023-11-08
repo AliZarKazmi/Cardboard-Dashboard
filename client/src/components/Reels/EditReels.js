@@ -99,7 +99,7 @@ const EditReels = () => {
                           (vendor, index) => (
                             <tr key={index}>
 
-            <img src={vendor.imgPath} alt="img"  style={{width:"80px", height:"50px"}}/>
+            <img src={`/admin-img/${vendor.imgPath}`} alt="img"  style={{width:"80px", height:"50px"}}/>
                               <td>{vendor.vendorName}</td>
                               <td>
                                 <UpdateRateInput vendor={vendor} size={size} id={id} />
