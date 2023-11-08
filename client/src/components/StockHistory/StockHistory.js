@@ -43,23 +43,30 @@ const StockHistory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    history && history.filter((item)=>{
-                                        return search.toLowerCase()===""? item : item.productType.toLowerCase().includes(search) || item.operation.toLowerCase().includes(search) ||item.categoryType.toLowerCase().includes(search)  ||item.time.toLowerCase().includes(search) 
-                                    }).map((item, index) => (
-                                        <tr key={index}>
-                                            <th className=' text-capitalize'>{item.productType}</th>
-                                            <td className=' text-capitalize'>{item.operation}</td>
-                                            <td className=' text-capitalize'>{item.categoryType}</td>
-                                            <td className=' text-capitalize'>{item.productSize}</td>
-                                            <td className=' text-capitalize'>{item.time}</td>
-                                            <td className=' text-capitalize'>{item.reelWeight}</td>
-                                            <td className=' text-capitalize'>{item.reelVendor}</td>
-                                            <td className=' text-capitalize'>{item.quantity}</td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
+  {history &&
+    history
+      .filter((item) => {
+        return search.trim() === "" || // Check if search is empty
+          (item.productType && item.productType.toLowerCase().includes(search)) ||
+          (item.operation && item.operation.toLowerCase().includes(search)) ||
+          (item.categoryType && item.categoryType.toLowerCase().includes(search)) ||
+          (item.time && item.time.toLowerCase().includes(search)) ||
+          (item.reelVendor && item.reelVendor.toLowerCase().includes(search));
+      })
+      .map((item, index) => (
+        <tr key={index}>
+          <th className="text-capitalize">{item.productType}</th>
+          <td className="text-capitalize">{item.operation}</td>
+          <td className="text-capitalize">{item.categoryType}</td>
+          <td className="text-capitalize">{item.productSize}</td>
+          <td className="text-capitalize">{item.time}</td>
+          <td className="text-capitalize">{item.reelWeight}</td>
+          <td className="text-capitalize">{item.reelVendor}</td>
+          <td className="text-capitalize">{item.quantity}</td>
+        </tr>
+      ))}
+</tbody>
+
                         </table>
                     </div>
 
