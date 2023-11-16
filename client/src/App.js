@@ -27,6 +27,7 @@ import ReelsStockIn from "./components/Reels/ReelsStockIn";
 import StockOut from "./components/Reels/StockOut";
 
 import StockHistory from "./components/StockHistory/StockHistory";
+import LoginPage from './components/Login/LoginPage.jsx';
 
 function App() {
   return (
@@ -36,7 +37,8 @@ function App() {
 
         <div className='dashboard-body'>
           <Routes>
-            <Route path="/" element={<ManagePrice />} />
+            {/* <Route path="/" element={<ManagePrice />} /> */}
+            <Route path="/" element={<LoginPage />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/products" element={<Product />} />
             <Route path="/scene" element={<CanvasContainer />} />
